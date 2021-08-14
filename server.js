@@ -30,7 +30,9 @@ io.on('connection',(socket)=>{
         
         botzList.push({
             bot:data.username,
-            id:socket.id
+            id:socket.id,
+            botStatus:'UNAVAILABLE',
+            connectedUser:null,
         })
         io.sockets.emit('broadcast',{
             event:'ACTIVE_BOTZ',
@@ -136,9 +138,23 @@ io.on('connection',(socket)=>{
 
 
     socket.on('bot-pre-offer',(data)=>{
-        
-        console.log(data)
-        
+        console.log('should match the dat',data)
+      selectedBot =  botzList.find(bot => bot.id ===data.bot.id)
+      console.log('I found the selected bot',selectedBot)
+      if (selectedBot){
+          if(!selectedBot.botStatus ==='AVAILABLE'){
+              console.log(selectedBot.botStatus)
+
+            io.to(socket.id).emit('bot-pre-offer-answer',({
+                answer:'REJECTED',
+
+            }))
+            return
+
+
+          }
+      }
+    
         
 
      io.to(data.bot.id).emit('bot-pre-offer',{
@@ -154,6 +170,7 @@ io.on('connection',(socket)=>{
             ...data,
             botSocketId:socket.id
         }
+        console.log('hello,',data,newData)
         io.to(data.usersocketId).emit('bot-pre-offer-answer',newData)
         
 
