@@ -185,8 +185,20 @@ io.on('connection',(socket)=>{
     })
 
     socket.on('bot_web_rtc_answer',(data)=>{
-        console.log('success bois!')
-        console.log(data)
+       
+        JSONData = JSON.parse(data)
+        console.log(JSONData)
+      
+        const {botCallingSocketId,userSocketId,answer}  = JSONData
+         const newData ={
+             botCallingSocketId,
+             userSocketId,
+             answer
+         }
+         console.log('here is the new dat,',newData)
+
+        io.to(userSocketId).emit('bot-webRTC-answer',(newData))
+       
     })
 
 
