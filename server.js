@@ -176,10 +176,12 @@ io.on('connection',(socket)=>{
 
     })
     socket.on('bot-web-rtc-offer',(data)=>{
-        console.log(data)
-        io.to(data.botCallingSocketId
-            
-            ).emit('bot_webrtc_offer',(data))
+        console.log('this is the bot web rtc offer',)
+        newdata={
+            ...data,
+            userSocket:socket.id
+        }
+        io.to(data.botCallingSocketId).emit('bot_webrtc_offer',(newdata))
     })
 
     socket.on('bot_web_rtc_answer',(data)=>{
